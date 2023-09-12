@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres:15 # minimal version is 11
+    restart: always
+    volumes:
+      - ./var/dbdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: puser
+      POSTGRES_PASSWORD: superpass
+      POSTGRES_DB: creatio
+
+  redis:
+    image: redis
+    restart: always
+
+  server:
+    image: creatio.server
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8443:5002"
+      - "8444:5000"
+
